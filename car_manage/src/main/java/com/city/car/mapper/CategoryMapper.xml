@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.city.car.mapper.CategoryMapper">
+
+	<insert useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+		id="insert" parameterType="com.city.car.model.CategoryModel">
+		insert into category(ccname,createTime) values(#{ccname},#{createTime}) 
+	</insert>
+
+	<insert id="insertLevels">
+		insert into cardriver(levelid,categoryid) values
+		<foreach collection="levels" item="levels" separator="," >
+			(#{levels},#{id})
+		</foreach>
+	</insert>
+
+	<select id="selectAll" resultType="com.city.car.model.CategoryModel">
+		select * from category
+	</select>
+	
+	<select id="selectLevel" resultType="com.city.car.model.LevalModel">
+		select * from level
+	</select>
+	
+	<select id="pageList"  resultType="com.city.car.model.CategoryModel">
+		select id,ccname,createTime from category order by createtime desc limit #{start},#{size} 
+	</select>
+	
+	<select id="selectByPrimaryKey"  resultType="com.city.car.model.CategoryModel">
+		select id,ccname from category where id = #{id}
+	</select>
+	
+	<select id="count" resultType="int">
+  		select count(*) from category
+  	</select>
+	
+	<delete id="delete">
+		delete from category where id = #{id}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from category where id in
+		<foreach collection="datas" item="id" open="(" close=")" separator="," >
+			#{id}
+		</foreach>
+	</delete>
+	
+	<update id="updateByPrimaryKey">
+		update  category set ccname = #{ccname} where id = #{id}
+	
+	</update>
+	
+</mapper>

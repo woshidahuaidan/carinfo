@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.city.car.mapper.CarinfoMapper">
+
+
+	<select id="driverByCarinfoId" resultType="com.city.car.model.DriverInfoModel">
+		SELECT d.*  FROM carinfo c , category cc, driverinfo d ,cardriver cd
+WHERE c.`id` = cc.`id` AND cc.`id` = cd.`categoryid` AND cd.`levelid` = d.`level` AND c.`cno`=#{cno}
+
+	</select>
+	
+	<select id="selectCarinfoByCategoryId" resultType="com.city.car.model.CarinfoModel">
+		select * from carinfo where id=#{id}
+	</select>
+
+	<select id="selectCarinfoByCategoryName" resultType="com.city.car.model.CarinfoModel">
+		select * from carinfo where ccname =#{ccname}
+		 <!-- <where>
+			<if test="ccname != null">
+			 and ccname =#{ccname}
+			</if>
+		</where> -->
+	</select>
+
+	<select id="selectByCarinfo" resultType="com.city.car.model.DriverInfoModel">
+		select * from carinfo
+	</select>
+
+	<select id="selectAll" resultType="com.city.car.model.CarinfoModel">
+		select * from carinfo
+	</select>
+	
+	<select id="selectByPrimaryKey"  resultType="com.city.car.model.CarinfoModel">
+		select * from carinfo
+		 where cid = #{cid}
+	</select>
+	
+	<select id="count" resultType="int">
+  		select count(*) from carinfo
+  	</select>
+  	
+  	<select id="pageList"  resultType="com.city.car.model.CarinfoModel">
+		select * from carinfo
+		order by createtime desc limit #{start},#{size} 
+	</select>
+	
+	<insert useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+		id="insert" parameterType="com.city.car.model.CarinfoModel">
+		insert into carinfo(ccname,createTime,cmodel,cnum,ccolor,status,cno,photo,id) values(
+		#{ccname},#{createTime},#{cmodel},#{cnum},
+		#{ccolor},#{status},#{cno},#{photo},#{id}
+		) 
+	</insert>
+	
+	<update id="updateByPrimaryKey">
+		update  carinfo set 
+		cmodel = #{cmodel},cnum = #{cnum},ccolor = #{ccolor},
+		status = #{status},cno = #{cno},photo=#{photo},
+		ccname = #{ccname} where cid = #{cid}
+	</update>
+	
+	<delete id="delete">
+		delete from carinfo where cid = #{cid}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from carinfo where cid in
+		<foreach collection="datas" item="cid" open="(" close=")" separator="," >
+			#{cid}
+		</foreach>
+	</delete>
+</mapper>

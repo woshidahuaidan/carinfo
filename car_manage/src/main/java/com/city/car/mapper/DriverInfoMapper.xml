@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.city.car.mapper.DriverInfoMapper">
+
+	<select id="selectByCategoryId" resultType="com.city.car.model.DriverInfoModel">
+		SELECT d.* FROM driverinfo d,category cc, cardriver cd 
+		WHERE d.level=cd.levelid AND cc.id=cd.categoryid AND  cc.id=#{id}
+	</select>
+
+	<select id="selectAll" resultType="com.city.car.model.DriverInfoModel">
+		select * from driverinfo
+	</select>
+
+<!-- 	<insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+		parameterType="com.city.car.model.DriverInfoModel">
+		insert into driverinfo(dname,sex,birth,dno,issueDate,level,organ,photo) values(
+			#{dname},#{sex},#{birth},#{dno},#{issueDate},
+			#{level},#{organ},#{photo}
+		)
+	</insert> -->
+	
+	<insert id="insert"  parameterType="Map">
+		insert into driverinfo(photo) values
+		<foreach collection="imgs" item="photo" separator=",">
+			(#{photo})
+		</foreach>
+	</insert>
+	
+	<insert id="insert1" useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+		parameterType="com.city.car.model.DriverInfoModel">
+		insert into driverinfo(dname,sex,birth,dno,issueDate,level,organ,files) values(
+			#{dname},#{sex},#{birth},#{dno},#{issueDate},
+			#{level},#{organ},#{files}
+		)
+	</insert>
+	
+	<select id="count" resultType="int">
+  		select count(*) from driverinfo
+  		
+  		<where>
+			<if test="dname != null">
+			and dname like concat('%', #{dname}, '%')
+			</if>
+			<if test="level != null">
+			and level like concat('%', #{level}, '%')
+			</if>
+			<if test="status != null">
+			and status like concat('%', #{status}, '%')
+			</if>
+		</where>
+  	</select>
+	
+	<select id="pageList"  resultType="com.city.car.model.DriverInfoModel">
+		select did,dname,sex,birth,dno,issueDate,level,organ,status,files from driverinfo
+		<where>
+			<if test="dname != null">
+			and dname like concat('%', #{dname}, '%')
+			</if>
+			<if test="level != null">
+			and level like concat('%', #{level}, '%')
+			</if>
+			<if test="status != null">
+			and status like concat('%', #{status}, '%')
+			</if>
+		</where>
+	    order by createtime desc limit #{start},#{size} 
+	</select>
+	
+	<select id="selectByPrimaryKey"  resultType="com.city.car.model.DriverInfoModel">
+		select * from driverinfo
+		 where did = #{did}
+	</select>
+	
+	<update id="updateByPrimaryKey">
+		update  driverinfo 
+		set dname = #{dname} , sex = #{sex},
+			birth = #{birth}, dno = #{dno},
+			issueDate = #{issueDate},files=#{files},
+			level = #{level},organ = #{organ},status = #{status}
+		where did = #{did}
+	</update>
+	
+	<delete id="delete">
+		delete from driverinfo where did = #{did}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from driverinfo where did in
+		<foreach collection="datas" item="did" open="(" close=")" separator="," >
+			#{did}
+		</foreach>
+	</delete>
+	
+	
+</mapper>

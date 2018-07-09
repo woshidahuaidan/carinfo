@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.city.car.mapper.UserMapper">
+	
+	<insert id="insertRole">
+		insert into user_role(roleid,userid) values
+		<foreach collection="role" item="roleid" separator="," >
+			(#{roleid},#{id})
+		</foreach>
+	</insert>
+	
+	<insert useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+		id="insert" parameterType="com.city.car.model.UserModel">
+		insert into user(name,password) values(
+		#{name},#{password}) 
+	</insert>
+	
+	<select id="selectRole" resultType="com.city.car.model.RoleModel">
+		select * from role
+	</select>
+	
+	<select id="selectLogin" resultType="com.city.car.model.UserModel">
+		select * from user where name=#{name} and password=#{password}
+	</select>
+	
+	<select id="queryPermissionsByUser" resultType="com.city.car.model.PermissionModel">
+		SELECT
+            *
+        FROM permission
+        WHERE id IN (
+            SELECT
+                permissionid
+            FROM role_permission
+            WHERE roleid IN (
+                SELECT
+                    roleid
+                FROM user_role
+                WHERE userid = #{id}
+            )
+        )
+	</select>
+	
+	<select id="pageList"  resultType="com.city.car.model.UserModel">
+		select * from user order by createtime desc limit #{start},#{size} 
+	</select>
+	
+	<select id="selectByPrimaryKey"  resultType="com.city.car.model.UserModel">
+		select * from user where id = #{id}
+	</select>
+	
+	<select id="count" resultType="int">
+  		select count(*) from user
+  	</select>
+  	
+  	<delete id="delete">
+		delete from user where id = #{id}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from user where id in
+		<foreach collection="datas" item="id" open="(" close=")" separator="," >
+			#{id}
+		</foreach>
+	</delete>
+	
+	<update id="updateByPrimaryKey">
+		update  user set name = #{name} ,password = #{password} where id = #{id}
+	</update>
+</mapper>

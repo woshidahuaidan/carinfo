@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.city.car.mapper.IllegalMapper">
+
+	<insert id="insert"  useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+		parameterType="com.city.car.model.IllegalModel">
+		insert into illegal(ereason,eaddr,emoney,etime,cno,dname) values(
+		#{ereason},#{eaddr},#{emoney},#{etime},#{cno},#{dname}) 
+	</insert>
+
+	<select id="select" parameterType="Map" resultMap="illegal">
+		select e.*,c.*,d.* from 
+		illegal e ,carinfo c,driverinfo d 		
+		 where d.dname = e.dname and c.cno = e.cno order by e.createtime desc
+	</select>
+
+	<resultMap autoMapping="true" type="com.city.car.model.IllegalModel"
+		id="illegal">
+		 <id column="eid" property="eid" /> 
+		 <result column="dname" property="dname"/>
+		 <result column="cno" property="cno"/>
+		<!-- <collection property="driver"
+			ofType="com.city.car.model.DriverInfoModel" autoMapping="true">
+		</collection>
+		<collection property="carinfo" javaType="com.city.car.model.CarinfoModel"
+			autoMapping="true">
+		</collection>  -->
+	</resultMap>
+
+	<select id="selectAll" resultType="com.city.car.model.IllegalModel">
+		select * from illegal
+	</select>
+	
+	<select id="pageList"  parameterType="Map" resultMap="illegal">
+		select e.*,c.*,d.* from 
+		illegal e ,carinfo c,driverinfo d 		
+		 where d.dname = e.dname and c.cno = e.cno order by e.createtime desc limit #{start},#{size} 
+	</select>
+	
+	<select id="count" resultType="int">
+  		select count(*) from illegal
+  	</select>
+  	
+  	<select id="countPage" resultType="int">
+  		select count(*) from illegal
+  	</select>
+	
+	<select id="selectByPrimaryKey"  resultType="com.city.car.model.IllegalModel">
+		select * from illegal where eid = #{eid}
+	</select>
+	
+	<update id="updateByPrimaryKey">
+		update  illegal 
+		set ereason = #{ereason} ,cno = #{cno} ,
+		dname = #{dname} ,emoney = #{emoney} ,
+		etime = #{etime}  ,eaddr = #{eaddr}
+		where eid = #{eid}
+	</update>
+	
+	<delete id="delete">
+		delete from illegal where eid = #{eid}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from illegal where id in
+		<foreach collection="datas" item="mid" open="(" close=")" separator="," >
+			#{mid}
+		</foreach>
+	</delete>
+	
+</mapper>

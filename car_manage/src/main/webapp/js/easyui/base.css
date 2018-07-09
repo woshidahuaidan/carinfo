@@ -1,0 +1,20 @@
+*{font-size:14px; font-family:Tahoma,Verdana,微软雅黑,新宋体;padding:0;margin:0}
+a{text-decoration: none; color:Black; }
+a:hover{ color:#416AA3; text-decoration:none;font-weight: bold;}
+ul li{list-style: none;}
+ul li div{margin:2px 0px; padding-top:10px;padding-left:10px;width: 160px;height: 30px}
+ul li div:hover{border:1px dashed #800000;background-color: #EED8AE; cursor: pointer;}
+
+#titleHeader{
+	float:left;
+	width: 600px;
+	margin: 10px 30px;
+}
+
+.titleLogo{
+	position: absolute;
+	font-size: 36px;
+	margin-top: 10px ;
+	margin-left: 10px;
+	font-family: 华文行楷
+}

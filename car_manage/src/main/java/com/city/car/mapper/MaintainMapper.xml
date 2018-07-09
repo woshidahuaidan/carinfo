@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.city.car.mapper.MaintainMapper">
+
+	<insert id="insert"  useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+		parameterType="com.city.car.model.MaintainModel">
+		insert into maintain(mreason,maddr,mmoney,mtime,cno,dname) values(
+		#{mreason},#{maddr},#{mmoney},#{mtime},#{cno},#{dname}) 
+	</insert>
+	
+	<select id="select" parameterType="Map" resultMap="maintain">
+		select m.*,c.*,d.* from 
+		maintain m ,carinfo c,driverinfo d 		
+		 where d.dname = m.dname and c.cno = m.cno order by m.createtime desc
+	</select>
+
+	<resultMap autoMapping="true" type="com.city.car.model.MaintainModel"
+		id="maintain">
+		 <id column="mid" property="mid" /> 
+		 <result column="dname" property="dname"/>
+		 <result column="cno" property="cno"/>
+		<!-- <collection property="driver"
+			ofType="com.city.car.model.DriverInfoModel" autoMapping="true">
+		</collection>
+		<collection property="carinfo" javaType="com.city.car.model.CarinfoModel"
+			autoMapping="true">
+		</collection>  -->
+	</resultMap>
+	
+	<select id="selectAll" resultType="com.city.car.model.MaintainModel">
+		select * from maintain
+	</select>
+	
+	<select id="pageList"  parameterType="Map" resultMap="maintain">
+		select m.*,c.*,d.* from 
+		maintain m ,carinfo c,driverinfo d 		
+		 where d.dname = m.dname and c.cno = m.cno order by m.createtime desc limit #{start},#{size} 
+	</select>
+	
+	<select id="count" resultType="int">
+  		select count(*) from maintain
+  	</select>
+  	
+  	<select id="countPage" resultType="int">
+  		select count(*) from maintain
+  	</select>
+	
+	<select id="selectByPrimaryKey"  resultType="com.city.car.model.MaintainModel">
+		select * from 
+		maintain m 
+		 where mid = #{mid}
+	</select>
+	
+	<update id="updateByPrimaryKey">
+		update  maintain 
+		set mreason = #{mreason} ,cno = #{cno} ,
+		dname = #{dname} ,mmoney = #{mmoney} ,
+		mtime = #{mtime}  ,maddr = #{maddr}
+		where mid = #{mid}
+	</update>
+	
+	<delete id="delete">
+		delete from maintain where mid = #{mid}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from maintain where id in
+		<foreach collection="datas" item="mid" open="(" close=")" separator="," >
+			#{mid}
+		</foreach>
+	</delete>
+	
+</mapper>

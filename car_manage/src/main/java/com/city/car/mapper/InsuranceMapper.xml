@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.city.car.mapper.InsuranceMapper">
+
+	<insert useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+		id="insert" parameterType="com.city.car.model.InsuranceModel">
+		insert into insurance(cno,stype,scharact,company,smoney,createTime,modifyTime) values(
+		#{cno},#{stype},#{scharact},#{company},#{smoney},#{createTime},#{modifyTime}
+		) 
+	</insert>
+
+	<select id="selectAll" resultType="com.city.car.model.InsuranceModel">
+		select * from insurance
+	</select>
+	
+	<select id="pageList"  resultType="com.city.car.model.InsuranceModel">
+		select sid,stype,scharact,company,smoney,createTime,modifyTime,cno from insurance
+		<where>
+			<if test="queryContent != null">
+			and cno like concat('%', #{queryContent}, '%')
+			</if>
+		</where>
+	    order by createtime desc limit #{start},#{size} 
+	</select>
+	
+	<select id="selectByPrimaryKey"  resultType="com.city.car.model.InsuranceModel">
+		select sid,stype,scharact,company,smoney,createTime,modifyTime,cno from insurance
+		 where sid = #{sid}
+	</select>
+	
+	  <select id="querySearch" resultType="com.city.car.model.InsuranceModel">
+  		select * from insurance  
+		<where>
+			<if test="queryContent != null">
+			and cno like concat('%', #{queryContent}, '%')
+			</if>
+		</where>
+  	</select>
+	
+	<select id="count" resultType="int">
+  		select count(*) from insurance
+  		<where>
+			<if test="queryContent != null">
+			and cno like concat('%', #{queryContent}, '%')
+			</if>
+		</where>
+  	</select>
+	
+	<delete id="delete">
+		delete from insurance where sid = #{sid}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from insurance where sid in
+		<foreach collection="datas" item="sid" open="(" close=")" separator="," >
+			#{sid}
+		</foreach>
+	</delete>
+	
+	<update id="updateByPrimaryKey">
+		update  insurance 
+		set stype = #{stype} , smoney = #{smoney},
+			scharact = #{scharact}, company = #{company},
+			modifyTime = #{modifyTime},cno=#{cno}
+		where sid = #{sid}
+	</update>
+	
+</mapper>

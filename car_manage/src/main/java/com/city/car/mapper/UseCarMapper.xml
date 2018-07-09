@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.city.car.mapper.UseCarMapper">
+	
+	<insert id="insert"  useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+		parameterType="com.city.car.model.UseCarModel">
+		insert into useCar(uname,utime,udate,ureason,cno,dname) values(
+		#{uname},#{utime},#{udate},#{ureason},#{cno},#{dname}) 
+	</insert>
+	
+	<select id="select" parameterType="Map" resultMap="UseCar">
+		SELECT * from 
+		usecar u ,carinfo c,driverinfo d 		
+		 where d.dname = u.dname and c.cno = u.cno order by u.createtime desc
+	</select>
+
+	<resultMap autoMapping="true" type="com.city.car.model.UseCarModel"
+		id="UseCar">
+		 <id column="uid" property="uid" /> 
+		 <result column="dname" property="dname"/>
+		 <result column="cno" property="cno"/>
+		<!-- <collection property="driver"
+			ofType="com.city.car.model.DriverInfoModel" autoMapping="true">
+		</collection>
+		<collection property="carinfo" javaType="com.city.car.model.CarinfoModel"
+			autoMapping="true">
+		</collection>  -->
+	</resultMap>
+	
+	<select id="selectAll" resultType="com.city.car.model.UseCarModel">
+		select * from usecar
+	</select>
+	
+	<select id="pageList"  resultType="com.city.car.model.UseCarModel">
+		SELECT * from usecar  
+		<where>
+			<if test="status != null">
+			and status like concat('%', #{status}, '%')
+			</if>
+		</where>
+		order by createtime desc limit #{start},#{size} 
+	</select>
+	<!-- <select id="pageList"  parameterType="Map" resultMap="UseCar">
+		SELECT * from 
+		usecar u ,carinfo c,driverinfo d 		
+		 where d.dname = u.dname and c.cno = u.cno order by u.createtime desc limit #{start},#{size} 
+	</select> -->
+	
+	<select id="selectByPrimaryKey"  resultType="com.city.car.model.UseCarModel">
+		select * from usecar where uid = #{uid}
+	</select>
+	
+	<select id="count" resultType="int">
+  		select count(*) from usecar
+  	</select>
+  	
+  	<select id="countPage" resultType="int">
+  		select count(*) from usecar
+  	</select>
+	
+	<delete id="delete">
+		delete from usecar where uid = #{uid}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from usecar where uid in
+		<foreach collection="datas" item="uid" open="(" close=")" separator="," >
+			#{uid}
+		</foreach>
+	</delete>
+	
+	<update id="updateByPrimaryKey">
+		update  useCar set 
+		utime = #{utime}, udate = #{udate}, 
+		ureason = #{ureason}, cno = #{cno}, 
+		dname = #{dname}, uname=#{uname}
+		where uid = #{uid}
+	</update>
+	
+	<update id="passStatus">
+	  	update usecar
+	   	 set 
+	   		 status = 1
+	   	   where uid in 
+	   	   <foreach collection="d" item="uid" close=")"  open="("  separator=",">
+	   	   #{uid}
+   	   </foreach> 
+  </update>
+  
+  <update id="stopStatus">
+  		update usecar
+	   	 set 
+	   		 status = 2
+	   	   where uid in 
+	   	   <foreach collection="d" item="uid" close=")"  open="("  separator=",">
+	   	   #{uid}
+   	   </foreach>  
+  </update>
+</mapper>
